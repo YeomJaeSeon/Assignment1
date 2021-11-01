@@ -1,9 +1,8 @@
-import { PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { CreateDateColumn, ObjectID, ObjectIdColumn, UpdateDateColumn } from "typeorm";
 
 export abstract class Base {
-
-    @PrimaryGeneratedColumn("increment")
-    public id: number;
+    @ObjectIdColumn()
+    id: ObjectID;
 
     @CreateDateColumn()
     created_at: Date;

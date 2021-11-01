@@ -1,20 +1,14 @@
-import { Entity, Column, OneToMany } from "typeorm";
-import { Base } from './base.entity';
-import { Post } from "./post"
-import dotenv from "dotenv";
-dotenv.config();
+import { Base } from "./base.entity";
+import { Column, Entity } from "typeorm";
+
 @Entity()
 export class User extends Base {
-
-    @Column({ unique: true })
+    @Column()
     email: string;
 
     @Column()
     password: string;
 
-    @Column({ default: 0 })
+    @Column()
     token: string;
-
-    @OneToMany(() => Post, post => post.user)
-    post: Post[];
 }
