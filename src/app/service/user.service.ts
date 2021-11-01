@@ -23,7 +23,7 @@ export class UserService {
     async loginRefreshToken(userInfo) {
         const { userId, refreshToken } = userInfo
         const user = await this.userRepository
-            .findOne({ where: { id: userId.id } });
+            .findOne({ where: { _id: userId.id } });
         user.token = refreshToken;
         await this.userRepository.save(user);
     }

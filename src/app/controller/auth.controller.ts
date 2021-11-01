@@ -18,7 +18,7 @@ export class AuthController {
         const { email, password } = req.body;
         const encryptedPassword = await bcrypt.hashSync(password, +process.env.SALT_ROUNDS);
         try {
-            const { exUser, newUser } = await this.userService.createUser({ email: email, password: encryptedPassword });
+            const { exUser, newUser } = await this.userService.createUser({ email: email, password: encryptedPassword, token: "0" });
             if (exUser) {
                 next(new HttpException(400, "Email duplicated"));
             }

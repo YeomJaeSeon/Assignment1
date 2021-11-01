@@ -2,9 +2,11 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export = {
-  type: "sqlite",
+  type: "mongodb",
   // database: "database.sqlite",
-  database: ":memory:",
+  url: 'mongodb+srv://admin:admin@onboarding.cfni0.mongodb.net/yeom?retryWrites=true&w=majority',
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
   synchronize: true,
   logging: false,
   seeds: ['src/app/database/seeds/**/*.seed.ts'],

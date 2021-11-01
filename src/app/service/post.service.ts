@@ -18,7 +18,7 @@ export class PostService {
 
     async selectPost(postId): Promise<any> {
         const post = await this.postRepository
-            .findOne({ where: { id: postId.id } });
+            .findOne(postId.id);
         if (post === undefined) {
             await this.queryRunner.release();
             throw new PostNotFoundException(String(postId));
@@ -30,9 +30,8 @@ export class PostService {
 
     async uploadPost(postInfo): Promise<any> {
         const { userId, text, title } = postInfo
-        console.log(userId);
         const user = await this.userRepository
-            .findOne({ where: { id: userId } });
+            .findOne(userId);
         if (user === undefined) {
             await this.queryRunner.release();
             throw new UserNotFoundException(String(userId));
@@ -42,6 +41,7 @@ export class PostService {
             const postInfo = { title, text, user };
             const post = await this.postRepository.save(postInfo);
             await this.queryRunner.commitTransaction();
+            return post;
         } catch (error) {
             console.error(error);
             await this.queryRunner.rollbackTransaction();
@@ -55,10 +55,9 @@ export class PostService {
         const { title, text, postId, userId } = updateQuestionInfo;
         console.log(title, text, postId, userId)
         const question = await this.postRepository
-            .findOne({
-                where: { id: postId, user: { id: userId } },
-                relations: ['user']
-            });
+            .findOne(
+                postId
+            );
         if (question === undefined) {
             const noAuthQuestion = await this.postRepository
                 .findOne({ where: { id: postId } });
@@ -87,13 +86,13 @@ export class PostService {
     async deletePost(deleteQuestionInfo): Promise<any> {
         const { postId, userId } = deleteQuestionInfo;
         const question = await this.postRepository
-            .findOne({
-                where: { id: postId, user: { id: userId } },
-                relations: ['user']
-            });
+            .findOne(
+                postId
+
+            );
         if (question === undefined) {
             const noAuthQuestion = await this.postRepository
-                .findOne({ where: { id: postId } });
+                .findOne(postId);
             if (noAuthQuestion !== undefined) {
                 await this.queryRunner.release();
                 throw new PermissionException(String(postId));
