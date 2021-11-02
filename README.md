@@ -50,23 +50,13 @@
 ``` 
     
 ### 4. API 명세
-[API 명세서]()
+[API 명세서](https://app.swaggerhub.com/apis-docs/earthkingman/Aimo_api/1.0.0)
 
-### 5. 빌드 및 실행 방법
-- 파일명 변경 .env.sample ->  .env 
-```
-  mv .env.sample .env
-  ```
-- 명령어  (설치가 조금 오래 걸립니다. 조금만 기다려 주세요)
-   ```shell
-   npm i
-   npm run api-docs
-   npm start
-   ```
+### 5. API 테스트 
 - 접속
-
-   http://localhost:3000/api-docs 
-
+```
+  http://3.36.121.236/api-docs/
+```
 ### 6.개발 보고서
 
  [보고서](https://github.com/earthkingman/BoradAPI/wiki)
