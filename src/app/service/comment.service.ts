@@ -29,7 +29,8 @@ export class CommentService {
     }
 
     async uploadComment(commentInfo) {
-        const { commentId, postId, text, userId } = commentInfo;
+        console.log(commentInfo)
+        const { postId, text, userId } = commentInfo;
         try {
             const user = await this.userRepository.findOne(userId);
             if (user === undefined) {
@@ -39,13 +40,11 @@ export class CommentService {
             if (post === undefined) {
                 throw new PostNotFoundException(String(postId));
             }
-            const commentInfo = { postId: postId, text: text, userId: userId, comments: [] };
+
+            const commentInfo = { postId: postId, text: text, userId: userId, subComments: [] };
+
             const comment = await this.commentRepository.save(commentInfo);
-            if (commentId) {
-                const exComment = await this.commentRepository.findOne(commentId);
-                await exComment.comments.push(comment);
-                await this.commentRepository.save(exComment);
-            }
+
             post.comments.push(comment);
             await this.postRepository.save(post);
             return comment;
@@ -70,6 +69,8 @@ export class CommentService {
         try {
             comment.text = text || comment.text;
             await this.commentRepository.save(comment);
+
+            //TODO: 댓글이 수정되었으면 게시판의 댓글도 수정되어야함.
         } catch (error) {
             console.error(error);
             throw error;
@@ -90,6 +91,7 @@ export class CommentService {
         }
         try {
             await this.commentRepository.remove(comment);
+            //comment제거되면 post에서도 comment가 제거되어야함.
         } catch (error) {
             console.error(error);
             throw error;

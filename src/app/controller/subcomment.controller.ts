@@ -1,16 +1,19 @@
 import { Request, Response, NextFunction } from "express";
 import { DecodedRequest } from "../definition/decoded_jwt";
 import { CommentService } from "../service/comment.service";
+import { SubCommentService } from "../service/subcomment.service";
 
-export class CommentController {
-    private commentService: CommentService;
+export class SubCommentController {
+    private subCommentService: SubCommentService;
 
     public async get(req: DecodedRequest, res: Response, next: NextFunction): Promise<any> {
-        const userId: string = String(req.decodedId);
-        const commentId: string = String(req.query.id);
+        const commentId: string = String(req.query.id); // subComment를 조회할필요가 있을까? 없다생각함. - comment를 통해서 subComment들을 조회하는것이 의미있다 생각함.
+
+        console.log(commentId);
+
         try {
-            this.commentService = new CommentService();
-            const exComment = await this.commentService.selectComment(commentId);
+            this.subCommentService = new SubCommentService();
+            const exComment = await this.subCommentService.selectComment(commentId);
             return res.status(200).json({
                 data: exComment
             })
@@ -21,15 +24,13 @@ export class CommentController {
 
     public async post(req: DecodedRequest, res: Response, next: NextFunction): Promise<any> {
         const userId = req.decodedId;
-        const { postId, text } = req.body;
-        // const { postId, commentId, text } = req.body;
+        const { commentId, text } = req.body; //무조건 commentId가있음 (대댓글이므로)
         
-        const commentInfo = { postId, text, userId };
+        const subCommentInfo = { text, userId, commentId };
         try {
-            this.commentService = new CommentService();
-            const result = await this.commentService.uploadComment(commentInfo);
+            this.subCommentService = new SubCommentService();
+            const result = await this.subCommentService.uploadSubComment(subCommentInfo);
             return res.status(200).json({
-                "postId": postId,
                 "comment": result,
                 message: "Upload Success",
             });
@@ -39,12 +40,12 @@ export class CommentController {
     }
 
     public async delete(req: DecodedRequest, res: Response, next: NextFunction): Promise<any> {
-        const commentId: string = String(req.query.id);
+        const subCommentId: string = String(req.query.id);
         const userId: string = String(req.decodedId);
-        this.commentService = new CommentService();
+        this.subCommentService = new SubCommentService();
         try {
-            const commentInfo = { userId, commentId };
-            const exComment = await this.commentService.deleteComment(commentInfo);
+            const subCommentInfo = { userId, subCommentId };
+            const exComment = await this.subCommentService.deleteSubComment(subCommentInfo);
             return res.status(200).json({
                 message: "Delete Success",
                 deletedComment: exComment
@@ -55,13 +56,14 @@ export class CommentController {
     }
 
     public async patch(req: DecodedRequest, res: Response, next: NextFunction): Promise<any> {
-        const commentId: string = String(req.query.id);
+        const subCommentId: string = String(req.query.id);
         const userId: string = String(req.decodedId);
-        this.commentService = new CommentService();
+        this.subCommentService = new SubCommentService();
+
         const { text } = req.body;
         try {
-            const commentInfo = { commentId, text, userId }
-            const exComment = await this.commentService.updateComment(commentInfo);
+            const subCommentInfo = { subCommentId, text, userId }
+            const exComment = await this.subCommentService.updateSubComment(subCommentInfo);
             return res.status(200).json({
                 message: "Update Success",
                 updatedComment: exComment
