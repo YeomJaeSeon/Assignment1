@@ -52,7 +52,6 @@
 ### 4. API 명세
 [API 명세서]()
 
-[SeedData](https://github.com/earthkingman/CRUD-API-NodeJS/wiki/SeedData)
 ### 5. 빌드 및 실행 방법
 - 파일명 변경 .env.sample ->  .env 
 ```
