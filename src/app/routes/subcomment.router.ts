@@ -1,11 +1,12 @@
 import express, { Request, Response, Router, NextFunction } from 'express';
-import { PostController } from '../controller/post.controller';
+import { CommentController } from '../controller/comment.controller';
 import { authJwt } from "../middlewares/auth.middleware";
 import { DecodedRequest } from '../definition/decoded_jwt'
+import { SubCommentController } from '../controller/subcomment.controller';
 const router: Router = express.Router();
-const controller: PostController = new PostController();
+const controller: SubCommentController = new SubCommentController();
 
-router.get('/', authJwt, async (req: DecodedRequest, res: Response, next: NextFunction) => {
+router.get('/', async (req: DecodedRequest, res: Response, next: NextFunction) => {
     await controller.get(req, res, next);
 });
 
@@ -22,4 +23,4 @@ router.delete('/', authJwt, async (req: DecodedRequest, res: Response, next: Nex
 })
 
 
-export const postRouter: Router = router;
+export const subCommentRouter: Router = router;

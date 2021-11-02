@@ -1,4 +1,4 @@
-import { getConnection, MongoRepository, Repository } from "typeorm";
+import { getConnection, MongoRepository } from "typeorm";
 import { PostNotFoundException } from '../exception/post_not_found_exception';
 import { PermissionException } from '../exception/permission_exception';
 import { UserNotFoundException } from '../exception/user_not_found_exception'
@@ -14,25 +14,30 @@ export class PostService {
         this.postRepository = getConnection().getMongoRepository(Post);
     }
 
-    async selectPost(postId): Promise<any> {
+    async selectPost(userId: string, postId: string): Promise<any> {
         const post = await this.postRepository
-            .findOne(postId.id);
+            .findOne(postId);
         if (post === undefined) {
             throw new PostNotFoundException(String(postId));
         } else {
+            if (!post.views?.includes(userId)) {
+                post.views.push(userId);
+                post.count += 1;
+                return await this.postRepository.save(post);
+            }
             return post;
         }
     }
 
     async uploadPost(postInfo): Promise<any> {
-        const { userId, text, title } = postInfo
+        const { userId, text, title, category } = postInfo
         const user = await this.userRepository
             .findOne(userId);
         if (user === undefined) {
             throw new UserNotFoundException(String(userId));
         }
         try {
-            const postInfo = { title, text, userEmail: user.email };
+            const postInfo = { title, text, userEmail: user.email, category, views: [], comments: [], count: 0 };//제목 내용 작성자 이메일
             const post = await this.postRepository.save(postInfo);
             return post;
         } catch (error) {
@@ -42,16 +47,14 @@ export class PostService {
 
     async updatePost(updatePostInfo): Promise<any> {
         const { title, text, postId, userId } = updatePostInfo;
-        console.log(title, text, postId, userId)
         const post = await this.postRepository
             .findOne(postId);
-        if (post == undefined) {
+        if (post == undefined) {//해당 게시글이없을 경우
             throw new PostNotFoundException(String(postId));
         }
         const user = await this.userRepository
             .findOne(userId);
-        console.log(post.userEmail, user.email)
-        if (post.userEmail != user.email) {
+        if (post.userEmail != user.email) { // 해당 게시글이 존재하지만 작성자 이메일과 로그인이메일이 다른 경우
             throw new PermissionException(String(postId));
         }
         try {
@@ -68,13 +71,12 @@ export class PostService {
         const { postId, userId } = deletePostInfo;
         const post = await this.postRepository
             .findOne(postId);
-        if (post == undefined) {
+        if (post == undefined) {// 해당 게시글이 없을 경우
             throw new PostNotFoundException(String(postId));
         }
         const user = await this.userRepository
             .findOne(userId);
-        console.log(post.userEmail, user.email)
-        if (post.userEmail != user.email) {
+        if (post.userEmail != user.email) {// 작성자 이메일과 로그인 이메일이 다른 경우
             throw new PermissionException(String(postId));
         }
         try {
