@@ -9,6 +9,18 @@ router.get('/', async (req: Request, res: Response, next: NextFunction) => {
     await controller.get(req, res, next);
 });
 
+router.get('/title', async (req: Request, res: Response, next: NextFunction) => {
+    await controller.getPostByTitle(req, res, next);
+});
+
+router.get('/email', async (req: Request, res: Response, next: NextFunction) => {
+    await controller.getPostByEmail(req, res, next);
+});
+
+router.get('/category', async (req: Request, res: Response, next: NextFunction) => {
+    await controller.getPostByCategory(req, res, next);
+});
+
 router.post('/', authJwt, async (req: DecodedRequest, res: Response, next: NextFunction) => {
     await controller.post(req, res, next);
 });
