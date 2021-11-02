@@ -70,4 +70,4 @@
 
 ### 6.개발 보고서
 
- [보고서]()
+ [보고서](https://github.com/earthkingman/BoradAPI/wiki)
