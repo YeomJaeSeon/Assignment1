@@ -8,7 +8,6 @@ import cookieParser from "cookie-parser";
 import passport from "passport";
 import passportConfig from "./passport";
 import { errorMiddleware } from "./middlewares/error.middleware"
-import { dataSeed } from "./seed/seed";
 passportConfig();
 dotenv.config();
 

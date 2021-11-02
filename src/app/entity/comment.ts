@@ -8,13 +8,10 @@ export class Comment extends Base {
     postId: number;
 
     @Column()
-    depth: number;
+    comments: Comment[];
 
     @Column()
-    parentId: string;
-
-    @Column()
-    author: string;
+    email: string;
 
     @Column()
     text: string;

@@ -6,6 +6,7 @@ import { authRouter } from './auth.router';
 import { postRouter } from './post.router';
 import { pageRouter } from './page.router';
 import { searchRouter } from './search.router';
+import { commentRouter } from './comment.router';
 
 const router: Router = express.Router();
 const swaggerSpec = YAML.load(path.join(__dirname, '../../../build/swagger.yaml'))
@@ -14,4 +15,5 @@ router.use('/auth', authRouter);
 router.use('/post', postRouter);
 router.use('/page', pageRouter);
 router.use('/search', searchRouter);
+router.use('/comment', commentRouter);
 export const applicationRouter: Router = router;

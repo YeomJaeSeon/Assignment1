@@ -30,9 +30,10 @@ export class PostController {
             category = "기타";
         try {
             const postInfo = { userId, text, title, category }
-            await this.postService.uploadPost(postInfo);
+            const exPost = await this.postService.uploadPost(postInfo);
             return res.status(200).json({
-                message: "Upload Success"
+                message: "Upload Success",
+                data: exPost
             })
         }
         catch (error) {
