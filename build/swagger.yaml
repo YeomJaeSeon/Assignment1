@@ -9,7 +9,7 @@ info:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 servers:
-  - url: 'http://localhost:3000'
+  - url: 'http://3.36.121.236'
 tags:
   - name: page
     description: 페이지
@@ -19,6 +19,10 @@ tags:
     description: 인증
   - name: search
     description: 검색
+  - name: comment
+    description: 댓글
+  - name: subcomment
+    description: 대댓글
 components:
   schemas:
     User:
@@ -37,21 +41,98 @@ components:
             $ref: '#/components/schemas/Post'
         count:
           type: integer
+          example: 1
     Post:
       properties:
         id:
-          type: integer
-          format: int64
-        userId:
-          type: integer
-          format: int64
-        title:
           type: string
-        text:
-          type: string
-        createAt:
+          example: 6181712f78e5357ebeedc59c
+        create_at:
           type: string
           format: date
+          example: 2021-11-02T17:11:11.737Z
+        updated_at:
+          type: string
+          format: date
+          example: 2021-11-02T17:26:22.613Z
+        title:
+          type: string
+          example: 나만의 게시글2
+        userEmail:
+          type: string
+          example: tt@example.com
+        text:
+          type: string
+          example: 나만의 게시글 - 내용
+        category:
+          type: string
+          example: 일상
+        count:
+          type: integer
+          format: int64
+          example: 1
+        views:
+          type: array
+          items:
+            type: string
+            example: 61814d9e72f3ac6c4dd4db78
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+    Comment:
+      properties:
+        postId:
+          type: string
+          example: 6181712f78e5357ebeedc59c
+        text:
+          type: string
+          example: 수정된 댓글23232323
+        userId:
+          type: string
+          example: 61814d9e72f3ac6c4dd4db78
+        email:
+          type: string
+          example: ymz3819@example.com
+        subComments:
+          type: array
+          example: []
+        created_at:
+          type: string
+          format: date
+          example: 2021-11-02T17:15:15.899Z
+        updated_at:
+          type: string
+          format: date
+          example: 2021-11-02T17:15:15.899Z
+        id:
+          type: string
+          example: 61817223b861ae7ef4e54389
+    SubComment:
+      properties:
+        text:
+          type: string
+          example: 대댓글-test
+        userId:
+          type: string
+          example: 61814d9e72f3ac6c4dd4db78
+        email:
+          type: string
+          example: ymz3819@example.com
+        commentId:
+          type: string
+          example: 61817223b861ae7ef4e54389
+        created_at:
+          type: string
+          format: date
+          example: 2021-11-02T20:28:56.287Z
+        updated_at:
+          type: string
+          format: date
+          example: 2021-11-02T20:28:56.287Z
+        id:
+          type: string
+          example: 61819f88bf06015b10fdb002
   requestBodies:
     createPost:
       content:
@@ -60,8 +141,13 @@ components:
             properties:
               title:
                 type: string
+                example: 나만의 게시글
               text:
                 type: string
+                example: 나만의 게시글 내용이에요
+              category:
+                type: string
+                example: 일상
       description: request data to create post
       required: true
     updatePost:
@@ -71,8 +157,10 @@ components:
             properties:
               title:
                 type: string
+                example: 나만의 게시글
               text:
                 type: string
+                example: 나만의 게시글 내용이에요
       description: request data to update post
       required: true
     createUser:
@@ -88,6 +176,32 @@ components:
           schema:
             $ref: '#/components/schemas/User'
       description: request data for user login
+      required: true
+    createComment:
+      content:
+        application/json:
+          schema:
+            properties:
+              postId:
+                type: string
+                example: 6181712f78e5357ebeedc59c
+              text:
+                type: string
+                example: 요리관련 댓글5
+      description: request data to create comment
+      required: true
+    updateComment:
+      content:
+        application/json:
+          schema:
+            properties:
+              commentId:
+                type: string
+                example: 61817228b861ae7ef4e5438a
+              text:
+                type: string
+                example: 요리관련 수정 댓글6
+      description: request data to create comment
       required: true
 paths:
   /page:
@@ -128,9 +242,8 @@ paths:
         - name: category
           in: query
           schema:
-            type: integer
-            format: int64
-          example: 기타
+            type: string
+          example: 일상
           required: true
       responses:
         '200':
@@ -138,7 +251,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Post'
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Post'
         '404':
           description: Post not found
   /search/title:
@@ -150,9 +265,8 @@ paths:
         - name: title
           in: query
           schema:
-            type: integer
-            format: int64
-          example: 게시글 제목
+            type: string
+          example: 나만의 게시글
           required: true
       responses:
         '200':
@@ -160,7 +274,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Post'
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Post'
         '404':
           description: Post not found
   /search/email:
@@ -182,7 +298,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Post'
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Post'
         '404':
           description: Post not found
   /post:
@@ -194,9 +312,8 @@ paths:
         - name: id
           in: query
           schema:
-            type: integer
-            format: int64
-          example: 1
+            type: string
+          example: 6181712f78e5357ebeedc59c
           required: true
       responses:
         '200':
@@ -204,7 +321,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Post'
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Post'
         '404':
           description: Post not found
     post:
@@ -219,7 +338,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Post'
+                properties:
+                  message:
+                    type: string
+                    example: Upload Success
+                  data:
+                    $ref: '#/components/schemas/Post'
         '401':
           description: jwt must be provided
         '404':
@@ -232,8 +356,7 @@ paths:
         - name: id
           in: query
           schema:
-            type: integer
-            format: int64
+            type: string
           example: 1
           required: true
       requestBody:
@@ -244,7 +367,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Post'
+                properties:
+                  message:
+                    type: string
+                    example: Update Success
         '401':
           description: jwt must be provided
         '403':
@@ -259,13 +385,19 @@ paths:
         - name: id
           in: query
           schema:
-            type: integer
-            format: int64
-          example: 1
+            type: string
+          example: 6181712f78e5357ebeedc59c
           required: true
       responses:
         '200':
           description: 게시글 삭제 성공
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                    example: Update Success
         '401':
           description: jwt must be provided
         '403':
@@ -282,6 +414,24 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  result:
+                    type: boolean
+                    example: true
+                  userInfo:
+                    properties:
+                      id:
+                        type: string
+                        example: 6181ae21bf06015b10fdb005
+                      email:
+                        type: string
+                        example: user@example.com
+                  message:
+                    type: string
+                    example: signup successful
         '404':
           description: email already exist
   /auth/login:
@@ -298,8 +448,9 @@ paths:
             application/json:
               schema:
                 properties:
-                  refreshToken:
+                  message:
                     type: string
+                    example: Success Login
         '404':
           description: email not found
   /auth/logout:
@@ -309,7 +460,14 @@ paths:
         - auth
       responses:
         '200':
-          description: OK
+          description: logout success
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                    example: logout
         '404':
           description: user not found
   /auth/refresh:
@@ -326,3 +484,258 @@ paths:
           description: Access token and refresh token are need for refresh!
         '404':
           description: user not found
+  /comment:
+    get:
+      summary: 댓글을 반환합니다.
+      tags:
+        - comment
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: string
+            example: 6181712f78e5357ebeedc59c
+          required: true
+      responses:
+        '200':
+          description: 댓글 요청 성공
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Comment'
+        '404':
+          description: Comment not found
+    post:
+      summary: 댓글을 작성합니다.
+      tags:
+        - comment
+      requestBody:
+        $ref: '#/components/requestBodies/createComment'
+      responses:
+        '200':
+          description: 댓글 작성 성공
+          content:
+            application/json:
+              schema:
+                properties:
+                  postId:
+                    type: string
+                    example: 6181a9a6bf06015b10fdb003
+                  comment:
+                    $ref: '#/components/schemas/Comment'
+                  message:
+                    type: string
+                    example: Upload Success
+        '401':
+          description: jwt must be provided
+        '404':
+          description: UserId not found
+    patch:
+      summary: 댓글을 수정합니다.
+      tags:
+        - comment
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: string
+            example: 61817223b861ae7ef4e54389
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                text:
+                  type: string
+                  example: 수정된 댓글
+      responses:
+        '200':
+          description: 댓글 수정 성공
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                    example: Update Success
+        '401':
+          description: jwt must be provided
+        '403':
+          description: You don't have edit permission
+        '404':
+          description: Comment not found
+    delete:
+      summary: 댓글을 삭제합니다.
+      tags:
+        - comment
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: string
+            example: 6181b7eabf06015b10fdb008
+          required: true
+      responses:
+        '200':
+          description: 댓글 삭제 성공
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                    example: Delete Success
+        '401':
+          description: jwt must be provided
+        '403':
+          description: You don't have edit permission
+        '404':
+          description: Comment not found
+  /subcomment:
+    get:
+      summary: 대댓글을 반환합니다.
+      tags:
+        - subcomment
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: string
+            example: 6181b8fdbf06015b10fdb009
+          required: true
+      responses:
+        '200':
+          description: 대댓글 반환 성공
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SubComment'
+        '404':
+          description: Comment not found
+    post:
+      summary: 대댓글을 작성합니다.
+      tags:
+        - subcomment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                commentId:
+                  type: string
+                  example: 6181b8fdbf06015b10fdb009
+                test:
+                  type: string
+                  example: 대댓글입니다
+      responses:
+        '200':
+          description: 대댓글 작성 성공
+          content:
+            application/json:
+              schema:
+                properties:
+                  comment:
+                    properties:
+                      id:
+                        type: string
+                        example: 6181b8fdbf06015b10fdb009
+                      created_at:
+                        type: string
+                        format: date
+                        example: 2021-11-02T22:17:33.166Z
+                      updated_at:
+                        type: string
+                        format: date
+                        example: 2021-11-02T22:22:43.649Z
+                      postId:
+                        type: string
+                        example: 6181a9a6bf06015b10fdb003
+                      subComments:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SubComment'
+                      email:
+                        type: string
+                        example: tt@example.com
+                      text:
+                        type: string
+                        example: 요리관련 댓글5
+                      userId:
+                        type: string
+                        example: 6181ae21bf06015b10fdb005
+                  message:
+                    type: string
+                    example: Upload Success
+        '401':
+          description: jwt must be provided
+        '404':
+          description: UserId not found
+    patch:
+      summary: 대댓글을 수정합니다.
+      tags:
+        - subcomment
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: string
+            example: 6181ba52bf06015b10fdb00e
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                text:
+                  type: string
+                  example: 수정된 대댓글
+      responses:
+        '200':
+          description: 대댓글 수정 성공
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                    example: Update Success
+        '401':
+          description: jwt must be provided
+        '403':
+          description: You don't have edit permission
+        '404':
+          description: Comment not found
+    delete:
+      summary: 대댓글을 삭제합니다.
+      tags:
+        - subcomment
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: string
+            example: 6181ba52bf06015b10fdb00e
+          required: true
+      responses:
+        '200':
+          description: 대댓글 삭제 성공
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                    example: Delete Success
+        '401':
+          description: jwt must be provided
+        '403':
+          description: You don't have edit permission
+        '404':
+          description: Comment not found
