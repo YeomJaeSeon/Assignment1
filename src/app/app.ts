@@ -31,8 +31,7 @@ export class Application {
     const host: string = this._server.get('host');
     const port: number = this._server.get('port');
     this._server.listen(port, host, () => {
-      createConnection().then(async (connection) => {
-        dataSeed(connection);
+      createConnection().then(async () => {
       });
       console.log(`Server started at http://${host}:${port}`);
     });

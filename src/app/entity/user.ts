@@ -1,5 +1,6 @@
+//user.ts
 import { Base } from "./base.entity";
-import { Column, Entity } from "typeorm";
+import { Column, Entity, ObjectID, ObjectIdColumn, OneToMany } from "typeorm";
 
 @Entity()
 export class User extends Base {
@@ -11,4 +12,6 @@ export class User extends Base {
 
     @Column()
     token: string;
+
+
 }
