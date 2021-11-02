@@ -6,7 +6,6 @@ export class CommentController {
     private commentService: CommentService;
 
     public async get(req: DecodedRequest, res: Response, next: NextFunction): Promise<any> {
-        const userId: string = String(req.decodedId);
         const commentId: string = String(req.query.id);
         try {
             this.commentService = new CommentService();

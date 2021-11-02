@@ -39,7 +39,7 @@ export class CommentService {
             if (post === undefined) {
                 throw new PostNotFoundException(String(postId));
             }
-            const commentInfo = { postId: postId, text: text, userId: userId, subComments: [] };
+            const commentInfo = { postId: postId, text: text, userId: userId, email: user.email ,subComments: [] };
             const comment = await this.commentRepository.save(commentInfo);
             post.comments.push(comment);
             await this.postRepository.save(post);
@@ -62,10 +62,31 @@ export class CommentService {
         if (comment.email != user.email) { // 해당 댓글이 존재하지만 작성자 이메일과 로그인이메일이 다른 경우
             throw new PermissionException(String(commentId));
         }
+
+        // 게시판도 조회해야함 . 게시글 데이터에서 댓글 수정해야하긔에..
+        const post = await this.postRepository
+            .findOne(comment.postId);
+        if (post === undefined) {//해당 댓글이 없을시
+            throw new PostNotFoundException(String(comment.postId));
+        }
         try {
             comment.text = text || comment.text;
             await this.commentRepository.save(comment);
-            //TODO: 댓글이 수정되었으면 게시판의 댓글도 수정되어야함.
+
+            post.comments = post.comments.map(cmt => {
+                if(String(cmt.id) === String(comment.id)){
+                    return {
+                        ...cmt,
+                        text: text
+                    }
+                }
+                else{
+                     return cmt;
+                }
+            })
+
+            await this.postRepository.save(post);
+
         } catch (error) {
             console.error(error);
             throw error;
@@ -84,9 +105,22 @@ export class CommentService {
         if (comment.email != user.email) {// 작성자 이메일과 로그인 이메일이 다른 경우
             throw new PermissionException(String(commentId));
         }
+
+        // 게시판도 조회해야함 . 게시글 데이터에서 댓글 수정해야하긔에..
+        const post = await this.postRepository
+            .findOne(comment.postId);
+        if (post === undefined) {//해당 댓글이 없을시
+            throw new PostNotFoundException(String(comment.postId));
+        }
+
         try {
+            post.comments = post.comments.filter(cmt => {
+                return String(cmt.id) != String(comment.id)
+                }
+            )
+            await this.postRepository.save(post);
+
             await this.commentRepository.remove(comment);
-            //comment제거되면 post에서도 comment가 제거되어야함.
         } catch (error) {
             console.error(error);
             throw error;

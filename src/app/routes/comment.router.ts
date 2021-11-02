@@ -5,7 +5,7 @@ import { DecodedRequest } from '../definition/decoded_jwt'
 const router: Router = express.Router();
 const controller: CommentController = new CommentController();
 
-router.get('/', authJwt, async (req: DecodedRequest, res: Response, next: NextFunction) => {
+router.get('/', async (req: DecodedRequest, res: Response, next: NextFunction) => {
     await controller.get(req, res, next);
 });
 
