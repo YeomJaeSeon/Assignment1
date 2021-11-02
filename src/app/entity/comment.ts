@@ -16,4 +16,7 @@ export class Comment extends Base {
 
     @Column()
     text: string;
+
+    @Column()
+    userId: string;
 }

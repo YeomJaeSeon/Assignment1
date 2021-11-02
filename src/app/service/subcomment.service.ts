@@ -18,7 +18,7 @@ export class SubCommentService {
         this.subCommentRepository = getConnection().getMongoRepository(SubComment);
     }
 
-    async selectComment(commentId: string): Promise<any> {
+    async selectSubComment(commentId: string): Promise<any> {
         const comment = await this.commentRepository
             .findOne(commentId);
         if (comment === undefined) {
@@ -29,7 +29,6 @@ export class SubCommentService {
     }
 
     async uploadSubComment(subCommentInfo) {
-        console.log(subCommentInfo)
         const { text, userId, commentId } = subCommentInfo;
         try {
             const user = await this.userRepository.findOne(userId);
@@ -125,7 +124,6 @@ export class SubCommentService {
         }
         try {
             comment.subComments = comment.subComments.filter(sub => {
-                console.log(`sub.id: ${sub.id}, subComment.id : ${subComment.id}`)    
                 return String(sub.id) != String(subComment.id)
                 }
             )
