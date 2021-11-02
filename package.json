@@ -8,7 +8,8 @@
       "coverage": "jest --coverage",
       "build": "nodemon --watch '*.ts' --exec 'ts-node' src/app/index.ts",
       "start": "ts-node src/app/index.ts",
-      "api-docs": "swagger-cli bundle ./src/swagger/openapi.yaml --outfile build/swagger.yaml --type yaml"
+      "api-docs": "swagger-cli bundle ./src/swagger/openapi.yaml --outfile build/swagger.yaml --type yaml",
+      "test": "jest --setupFiles dotenv/config --detectOpenHandles --forceExit"   
    },
    "repository": {
       "type": "git",
@@ -21,6 +22,7 @@
    },
    "homepage": "https://github.com/earthkingman/CRUD-API-NodeJS#readme",
    "devDependencies": {
+      "@babel/preset-typescript": "^7.16.0",
       "@types/jest": "^27.0.2",
       "@types/node": "^8.0.29",
       "@types/supertest": "^2.0.11",

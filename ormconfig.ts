@@ -1,14 +1,12 @@
-import dotenv from "dotenv";
-dotenv.config();
-
 export = {
   type: "mongodb",
   // database: "database.sqlite",
-  url: 'mongodb+srv://admin:admin@onboarding.cfni0.mongodb.net/yeom?retryWrites=true&w=majority',
+  url: 'mongodb+srv://admin:admin@onboarding.cfni0.mongodb.net/unittest?retryWrites=true&w=majority',
   useNewUrlParser: true,
   useUnifiedTopology: true,
   synchronize: true,
   logging: false,
+  // test: true,
   seeds: ['src/app/database/seeds/**/*.seed.ts'],
   entities: ["src/app/entity/**/*.ts"],
   migrations: ["src/app/migration/**/*.ts"],

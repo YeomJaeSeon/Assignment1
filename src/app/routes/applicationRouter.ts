@@ -12,4 +12,5 @@ router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 router.use('/auth', authRouter);
 router.use('/post', postRouter);
 router.use('/page', pageRouter);
+
 export const applicationRouter: Router = router;
