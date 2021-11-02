@@ -4,7 +4,7 @@ dotenv.config();
 export = {
   type: "mongodb",
   // database: "database.sqlite",
-  url: 'mongodb+srv://admin:admin@onboarding.cfni0.mongodb.net/yeom?retryWrites=true&w=majority',
+  url: 'mongodb+srv://admin:admin@onboarding.cfni0.mongodb.net/jipark?retryWrites=true&w=majority',
   useNewUrlParser: true,
   useUnifiedTopology: true,
   synchronize: true,

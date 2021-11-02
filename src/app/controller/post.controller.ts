@@ -8,7 +8,7 @@ export class PostController {
     private postService: PostService;
 
     public async get(req: Request, res: Response, next: NextFunction): Promise<any> {
-        const postId: number = Number(req.query.id);
+        const postId: string = String(req.query.id);
         console.log(postId);
         this.postService = new PostService();
         try {
@@ -21,7 +21,7 @@ export class PostController {
         }
     }
     public async post(req: DecodedRequest, res: Response, next: NextFunction): Promise<any> {
-        const userId: number = req.decodedId;
+        const userId: string = String(req.decodedId);
         this.postService = new PostService();
         const { title, text } = req.body;
         try {
@@ -37,8 +37,8 @@ export class PostController {
     }
 
     public async delete(req: DecodedRequest, res: Response, next: NextFunction): Promise<any> {
-        const postId: number = Number(req.query.id);
-        const userId: number = req.decodedId;
+        const postId: string = String(req.query.id);
+        const userId: string = String(req.decodedId);
         this.postService = new PostService();
         try {
             const postInfo = { userId, postId };
@@ -51,8 +51,8 @@ export class PostController {
         }
     }
     public async patch(req: DecodedRequest, res: Response, next: NextFunction): Promise<any> {
-        const postId: number = Number(req.query.id);
-        const userId: number = req.decodedId;
+        const postId: string = String(req.query.id);
+        const userId: string = String(req.decodedId);
         this.postService = new PostService();
         const { text, title } = req.body;
         try {
