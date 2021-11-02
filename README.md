@@ -54,9 +54,9 @@
 
 ### 5. API 테스트 
 - 접속
-```
+
   http://3.36.121.236/api-docs/
-```
+
 ### 6.개발 보고서
 
  [보고서](https://github.com/earthkingman/BoradAPI/wiki)
