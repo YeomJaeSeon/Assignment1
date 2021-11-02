@@ -7,10 +7,7 @@ export class SubCommentController {
     private subCommentService: SubCommentService;
 
     public async get(req: DecodedRequest, res: Response, next: NextFunction): Promise<any> {
-        const commentId: string = String(req.query.id); // subComment를 조회할필요가 있을까? 없다생각함. - comment를 통해서 subComment들을 조회하는것이 의미있다 생각함.
-
-        console.log(commentId);
-
+        const commentId: string = String(req.query.id); // subComment를 조회할필요가 있을까? 없다생각함. - comment를 통해서 subComment들을 조회하는것이 의미있다 생각함
         try {
             this.subCommentService = new SubCommentService();
             const exComment = await this.subCommentService.selectComment(commentId);
