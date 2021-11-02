@@ -1,18 +1,18 @@
 import { Request, Response, NextFunction } from 'express';
 import { DecodedRequest } from '../definition/decoded_jwt'
-import { HttpException } from '../exception/http_exception';
 import { PostService } from "../service/post.service";
 
 export class PostController {
 
     private postService: PostService;
 
-    public async get(req: Request, res: Response, next: NextFunction): Promise<any> {
+    public async get(req: DecodedRequest, res: Response, next: NextFunction): Promise<any> {
+        const userId: string = String(req.decodedId);
         const postId: string = String(req.query.id);
         console.log(postId);
         this.postService = new PostService();
         try {
-            const exPost = await this.postService.selectPost({ id: postId });
+            const exPost = await this.postService.selectPost(userId, postId);
             return res.status(200).json({
                 data: exPost
             })

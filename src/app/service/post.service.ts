@@ -14,12 +14,17 @@ export class PostService {
         this.postRepository = getConnection().getMongoRepository(Post);
     }
 
-    async selectPost(postId): Promise<any> {
+    async selectPost(userId: string, postId: string): Promise<any> {
         const post = await this.postRepository
-            .findOne(postId.id);
+            .findOne(postId);
         if (post === undefined) {
             throw new PostNotFoundException(String(postId));
         } else {
+            if (!post.views?.includes(userId)) {
+                post.views.push(userId);
+                post.count += 1;
+                return await this.postRepository.save(post);
+            }
             return post;
         }
     }
@@ -32,7 +37,7 @@ export class PostService {
             throw new UserNotFoundException(String(userId));
         }
         try {
-            const postInfo = { title, text, userEmail: user.email, category };//제목 내용 작성자 이메일
+            const postInfo = { title, text, userEmail: user.email, category, views: [], comments: [], count: 0 };//제목 내용 작성자 이메일
             const post = await this.postRepository.save(postInfo);
             return post;
         } catch (error) {
