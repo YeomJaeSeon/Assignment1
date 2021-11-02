@@ -12,4 +12,7 @@ export class Post extends Base {
 
     @Column()
     userEmail: string
+
+    @Column()
+    category: string
 }
