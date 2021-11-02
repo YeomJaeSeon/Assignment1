@@ -18,6 +18,8 @@ tags:
     description: 게시글
   - name: auth
     description: 인증
+  - name: search
+    description: 검색
 
 components:
   schemas:
@@ -123,7 +125,75 @@ paths:
                 $ref: "#/components/schemas/Page"
         "404":
           description: Page not found
-     
+  /search/category:
+    get:
+      summary: 게시글을 카테고리로 조회합니다.
+      tags:
+        - search
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: integer
+            format: int64
+          example: 기타
+          required: true
+      responses:
+        "200":
+          description: 게시글 요청 성공
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+        "404":
+          description: Post not found
+  
+  /search/title:
+    get:
+      summary: 게시글을 제목으로 조회합니다.
+      tags:
+        - search
+      parameters:
+        - name: title
+          in: query
+          schema:
+            type: integer
+            format: int64
+          example: 게시글 제목
+          required: true
+      responses:
+        "200":
+          description: 게시글 요청 성공
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+        "404":
+          description: Post not found
+  
+  /search/email:
+    get:
+      summary: 게시글을 카테고리로 조회합니다.
+      tags:
+        - search
+      parameters:
+        - name: email
+          in: query
+          schema:
+            type: integer
+            format: int64
+          example: user@example.com
+          required: true
+      responses:
+        "200":
+          description: 게시글 요청 성공
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+        "404":
+          description: Post not found
+             
           
   /post:
     get:
@@ -147,7 +217,7 @@ paths:
                 $ref: "#/components/schemas/Post"
         "404":
           description: Post not found
-
+          
     post:
       summary: 게시글을 작성합니다.
       tags:

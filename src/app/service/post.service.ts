@@ -24,37 +24,6 @@ export class PostService {
         }
     }
 
-    async selectPostTitle(postTitle: string): Promise<any> {
-        const post = await this.postRepository
-            .find({ title: postTitle });
-        if (post === undefined) {
-            throw new PostNotFoundException(String(postTitle));
-        } else {
-            return post;
-        }
-    }
-
-    async selectPostUserEmail(userEmail: string): Promise<any> {
-        const post = await this.postRepository
-            .find({ userEmail: userEmail });
-        console.log(post);
-        if (post === undefined) {
-            throw new PostNotFoundException(String(userEmail));
-        } else {
-            return post;
-        }
-    }
-
-    async selectPostCategory(category: string): Promise<any> {
-        const post = await this.postRepository
-            .find({ category: category });
-        if (post === undefined) {
-            throw new PostNotFoundException(String(category));
-        } else {
-            return post;
-        }
-    }
-
     async uploadPost(postInfo): Promise<any> {
         const { userId, text, title, category } = postInfo
         const user = await this.userRepository
