@@ -10,13 +10,16 @@ export class PageService {
 
     async getPostList(pageInfo) {
         const { limit, offset } = pageInfo;
-        const [postList, postCount] = await this.postRepository
+        const [postList, count] = await this.postRepository
             .findAndCount({
+                order: {
+                  created_at : 'ASC'
+                },
                 take: limit,
                 skip: (offset - 1) * limit
             })
-
-        return { postList, postCount };
+        
+        return { postList : postList, totalCount : postList.length };
     }
 
 }
