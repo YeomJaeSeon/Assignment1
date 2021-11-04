@@ -1,16 +1,25 @@
 # BoradAPI
 원티드 프리 온보딩 (에이모 기업과제 1주차) 10조 
+이 프로젝트는 원티드x위코드 백엔드 프리온보딩 과제 일환으로 aimmo에서 출제한 과제를 기반으로 만들었습니다.
+
+## Members
+|이름   |github                   |담당 기능|
+|-------|-------------------------|--------------------|
+|박지율 | [earthkingman](https://github.com/earthkingman)   | 개발 및 배포 환경 설정, 게시글 CRUD, API 보안   |
+|염재선 | [Yeom Jae Seon](https://github.com/YeomJaeSeon) | DB Modeling, 댓글 대댓글 CRUD   |
 
 
-# CRUD-API-NodeJS
-### 1. 설명
- 게시판 REST API
+### 1. 설명(개발 요구 사항)
+- 원티드 지원 과제 내용 포함 (기본적인 게시판 글쓰기)
 - 게시글 카테고리
 - 게시글 검색
 - 대댓글(1 depth)
-    - 대댓글 pagination
+    - 댓글 및 대댓글 pagination
 - 게시글 읽힘 수
     - 같은 User가 게시글을 읽는 경우 count 수 증가하면 안 됨
+- Rest API 설계
+- Unit Test
+- 1000만건 이상의 데이터를 넣고 성능테스트 진행 결과 필요
 
 ### 2. 프로젝트 구조
 - 기본 환경
